@@ -1,6 +1,7 @@
 import React from 'react'
 
 function MyTodo({task, completed, onTodoComplete}) {
+  console.log(task)
   const styling = {
     color: completed ? "green" : "black"
   }
@@ -18,4 +19,4 @@ function MyTodo({task, completed, onTodoComplete}) {
   )
 }
 
-export default MyTodo
+export default React.memo(MyTodo)

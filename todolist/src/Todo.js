@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useMemo, useCallback } from 'react';
 import { TodoContext, DispatchContext } from './TodoProvider';
 import MyTodo from './MyTodo';
 
@@ -7,22 +7,21 @@ function Todo() {
   const {state, dispatch} = useContext(TodoContext)
   // const dispatch = useContext(DispatchContext)
   // console.log(state)
-  console.log("form rerendered")
 
   const onTodoAdded = (e) => {
     e.preventDefault()
     dispatch({
-      type: "ADD", task: task
+      type: "ADDED", task: task
     });
     setTask('')
   };
 
-  const onTodoComplete = (task) => {
-    dispatch({
-      type: "COMPLETED", task: task
-    });
-  };
-  
+  const onTodoComplete = useCallback((task) => {
+      dispatch({
+          type: "TOGGLED", task: task
+      });
+    }, [dispatch]);
+
   return (
     <>
       <form onSubmit={onTodoAdded}>
@@ -32,8 +31,8 @@ function Todo() {
       <ul>
       {state && state.map((todo, i) => (
           <MyTodo
-            {...todo}
-            onTodoAdded={onTodoAdded}
+            completed={todo.completed}
+            task={todo.task}
             onTodoComplete={onTodoComplete}
             key={i}
           />
